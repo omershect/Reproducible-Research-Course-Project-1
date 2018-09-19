@@ -393,7 +393,10 @@ head(Steps_Per_Day)</code></pre>
 Steps_Per_Interval&lt;-aggregate(Activity_DF$steps, 
                        by=list(Activity_DF$interval), 
                        FUN=mean, 
-                       na.rm=TRUE)</code></pre>
+                       na.rm=TRUE)
+#calculate The 5-minute interval that, on average, holds the maximum number of steps
+sprintf(&quot;The 5-minute interval that, on average, holds the maximum number of steps is: %i&quot;,Steps_Per_Interval[which.max(Steps_Per_Interval$x), ]$Group.1)</code></pre>
+<pre><code>## [1] &quot;The 5-minute interval that, on average, holds the maximum number of steps is: 835&quot;</code></pre>
 <p>Time series plot of the average number of steps taken using ggplot</p>
 <pre class="r"><code>#Load ggplot2
 library(ggplot2)
