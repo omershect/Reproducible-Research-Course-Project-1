@@ -13,7 +13,7 @@ Download the files and unzip them into a data directory
 Check if data directory exist, if not create it
 Than download the data and unzip it if not allredy exist
 Read the Dataset into a datframe - Activity_DF
-```{r Load Data}
+```{r}
 if(!file.exists("data")) {  
         dir.create("data")  
 }  
@@ -26,9 +26,10 @@ if(!file.exists("./data/Activity.zip")) {
 Activity_DF<-read.csv("./data/Activity.csv",sep = ",")
 ```
 
+
 ## First look at the dataset
 
-```{r Data Summary}
+```{r}
 str(Activity_DF)
 #Show only the non missing values in steps 
 head(Activity_DF[which(!is.na(Activity_DF$steps)), ])
@@ -63,10 +64,8 @@ qplot(Steps_Per_Day$Total.Steps, geom="histogram",bins=10,xlab = "Steps",ylab = 
 
 
 
-## What is the average daily activity pattern?
-
 Calculate the mean and median per day 
-```{r Process}
+```{r}
 #Add the mean and median steps per day to the Steps_Per_Day
 Steps_Per_Day<-cbind(Steps_Per_Day,data.frame(Steps.mean = tapply(Activity_DF$steps,as.Date(Activity_DF$date,"%Y-%m-%d"),mean)))
 
@@ -75,6 +74,29 @@ head(Steps_Per_Day)
 
 ```
 
+## What is the average daily activity pattern?
+
+Calculate the averge steps per interval
+```{r}
+#Calculate the averge steps per interval (NA Remove)
+Steps_Per_Interval<-aggregate(Activity_DF$steps, 
+                       by=list(Activity_DF$interval), 
+                       FUN=mean, 
+                       na.rm=TRUE)
+#calculate The 5-minute interval that, on average, holds the maximum number of steps
+sprintf("The 5-minutes interval that, on average, holds the maximum number of steps is: %i",Steps_Per_Interval[which.max(Steps_Per_Interval$x), ]$Group.1)
+
+
+```
+
+Time series plot of the average number of steps taken using ggplot 
+```{r}
+#Load ggplot2
+library(ggplot2)
+#plot a time serial of the avaarge number of stesp (withot missing values)
+ggplot(data=Steps_Per_Interval,aes(y=x,x=Group.1))+geom_line()+labs(y="Avarage number of steps",x = "Interval in minutes", title = "Time series of the average number of steps taken (NA Removed)")
+
+```
 
 
 
