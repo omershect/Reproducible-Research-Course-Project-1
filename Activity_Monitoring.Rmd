@@ -1,5 +1,9 @@
 ---
 title: "Reproducible Research: Peer Assessment 1"
+Author:
+        "Omer Shechter"
+Date:
+        "20/09/2018"
 output: 
   html_document:
     keep_md: true
