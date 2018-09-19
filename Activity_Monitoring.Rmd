@@ -52,19 +52,19 @@ Steps_Per_Day<-data.frame(date = unique(as.Date(Activity_DF$date,"%Y-%m-%d")), T
 head(Steps_Per_Day)
 ```
 
-Plot the Histogram of the total steps per day (Including NA values)
+Plot the Histogram of the total steps per day (Including NA values).
 ```{r Histogram Plot}
 ##Load ggplot2
 library(ggplot2)
 
-#Plot the Histogram (with missing values)
-qplot(Steps_Per_Day$Total.Steps, geom="histogram",bins=10,xlab = "Steps",ylab = "Count",main = "Total Steps per day Histogram")  
+#Plot the Histogram (Remove missing values)
+qplot(na.omit(Steps_Per_Day)$Total.Steps, geom="histogram",bins=10,xlab = "Steps",ylab = "Count",main = "Total Steps per day Histogram (NA Removed)")  
 
 ```
 
 
 
-Calculate the mean and median per day 
+Calculate the mean and median per day.
 ```{r}
 #Add the mean and median steps per day to the Steps_Per_Day
 Steps_Per_Day<-cbind(Steps_Per_Day,data.frame(Steps.mean = tapply(Activity_DF$steps,as.Date(Activity_DF$date,"%Y-%m-%d"),mean)))
@@ -76,7 +76,7 @@ head(Steps_Per_Day)
 
 ## What is the average daily activity pattern?
 
-Calculate the averge steps per interval
+Calculate the averge steps per interval.
 ```{r}
 #Calculate the averge steps per interval (NA Remove)
 Steps_Per_Interval<-aggregate(Activity_DF$steps, 
@@ -89,7 +89,7 @@ sprintf("The 5-minutes interval that, on average, holds the maximum number of st
 
 ```
 
-Time series plot of the average number of steps taken using ggplot 
+Time series plot of the average number of steps taken using ggplot. 
 ```{r}
 #Load ggplot2
 library(ggplot2)
@@ -101,8 +101,8 @@ ggplot(data=Steps_Per_Interval,aes(y=x,x=Group.1))+geom_line()+labs(y="Avarage n
 
 
 ## Imputing missing values
-This data set contain some dyas which are data is missing
-Calculate what is the amountof data mising and what is the percantage
+This data set contain some dyas which are data is missing.
+Calculate what is the amountof data mising and what is the percantage.
 ```{r}
 #overall NA Samples
 NA_count <- sum(is.na(Activity_DF$steps))
@@ -111,14 +111,75 @@ NA_Precentage<-sum(is.na(Activity_DF$steps)) /length(Activity_DF$steps) * 100
 sprintf("Overall Steps Data misiing is %f in Precentage %f%%",NA_count,NA_Precentage)
 ```
 
-The amount of the missing data is not negligible 
-In order to overcome the NA values will be replaced by the mean value per day
-
+The amount of the missing data is not negligible.  
+In order to overcome the NA values will be replaced by the mean value per day.
 ```{r}
 #calaculate the positin of the NA values 
 NA_Vector_Pos<-which(is.na(Activity_DF$steps))
+#Create avector of the means
+Mean_Vector <- rep(mean(Activity_DF$steps, na.rm=TRUE), times=length(NA_Vector_Pos))
+#Copy the orignal Data frame to a new one
+Activity_DF_NO_NA<-Activity_DF
+#replace all NA values with the means values per day 
+Activity_DF_NO_NA[NA_Vector_Pos, "steps"] <- Mean_Vector
+
+head(Activity_DF_NO_NA)
+
+
 ```
 
 
 
+Calculate and Plot again the total sum of the steps per day after handling the NA values 
+
+```{r}
+#Create a dataframe with  total steps per day  and dates
+Steps_Per_Day_NA_Handled<-data.frame(date = unique(as.Date(Activity_DF_NO_NA$date,"%Y-%m-%d")), Total.Steps = tapply(Activity_DF_NO_NA$steps,as.Date(Activity_DF$date,"%Y-%m-%d"),sum))
+
+head(Steps_Per_Day_NA_Handled)
+```
+
+Plot the Histogram of the total steps per day (Including NA values).
+```{r}
+##Load ggplot2
+library(ggplot2)
+
+#Plot the Histogram (Remove missing values)
+qplot(Steps_Per_Day_NA_Handled$Total.Steps, geom="histogram",bins=10,xlab = "Steps",ylab = "Count",main = "Total Steps per day Histogram (NA Handled)")  
+
+```
+
+
 ## Are there differences in activity patterns between weekdays and weekends?
+Using the modyfied Dataframe (with handled NA values) : 
+Convert the dates from Factor to date
+Set a new column which indicate if the sample is week days or weekend
+Do some summary calculation 
+Plot the activtes per 5 minutes interval according to the week or weekend days 
+
+
+
+```{r results='asis', echo=FALSE, include=FALSE,}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
+#Load library dplye
+
+library(dplyr)
+library(mosaic)
+#Using English week days ...
+Sys.setlocale("LC_TIME", "C")
+```
+
+
+```{r}
+#Convert the Date colomn from Charcter to date format
+Activity_DF_NO_NA$date<-as.Date(Activity_DF_NO_NA$date,"%Y-%m-%d")
+#Create new Columns holding the week day name
+Activity_DF_NO_NA<-mutate(Activity_DF_NO_NA,Week.Days=weekdays(Activity_DF_NO_NA$date))
+#Create a colomns weekend  1 - Weekend (Saturday or Sunday) , 0 rest of the week days 
+Activity_DF_NO_NA<-mutate(Activity_DF_NO_NA,Week.end=derivedFactor("1" = (Activity_DF_NO_NA$Week.Days == "Sunday") | Activity_DF_NO_NA$Week.Days == "Saturday",.default = 0))
+head(Activity_DF_NO_NA)
+
+
+```
+
+
