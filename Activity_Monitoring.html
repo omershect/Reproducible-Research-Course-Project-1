@@ -395,8 +395,8 @@ Steps_Per_Interval&lt;-aggregate(Activity_DF$steps,
                        FUN=mean, 
                        na.rm=TRUE)
 #calculate The 5-minute interval that, on average, holds the maximum number of steps
-sprintf(&quot;The 5-minute interval that, on average, holds the maximum number of steps is: %i&quot;,Steps_Per_Interval[which.max(Steps_Per_Interval$x), ]$Group.1)</code></pre>
-<pre><code>## [1] &quot;The 5-minute interval that, on average, holds the maximum number of steps is: 835&quot;</code></pre>
+sprintf(&quot;The 5-minutes interval that, on average, holds the maximum number of steps is: %i&quot;,Steps_Per_Interval[which.max(Steps_Per_Interval$x), ]$Group.1)</code></pre>
+<pre><code>## [1] &quot;The 5-minutes interval that, on average, holds the maximum number of steps is: 835&quot;</code></pre>
 <p>Time series plot of the average number of steps taken using ggplot</p>
 <pre class="r"><code>#Load ggplot2
 library(ggplot2)
@@ -406,6 +406,13 @@ ggplot(data=Steps_Per_Interval,aes(y=x,x=Group.1))+geom_line()+labs(y=&quot;Avar
 </div>
 <div id="imputing-missing-values" class="section level2">
 <h2>Imputing missing values</h2>
+<p>This data set contain some dyas which are data is missing</p>
+<pre class="r"><code>#overall NA Samples
+NA_count &lt;- sum(is.na(Activity_DF$steps))
+#Precentage of missing data 
+NA_Precentage&lt;-sum(is.na(Activity_DF$steps)) /length(Activity_DF$steps) * 100
+sprintf(&quot;Overall Steps Data misiing is %f in Precentage %f%%&quot;,NA_count,NA_Precentage)</code></pre>
+<pre><code>## [1] &quot;Overall Steps Data misiing is 2304.000000 in Precentage 13.114754%&quot;</code></pre>
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level2">
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>

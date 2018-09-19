@@ -101,6 +101,23 @@ ggplot(data=Steps_Per_Interval,aes(y=x,x=Group.1))+geom_line()+labs(y="Avarage n
 
 
 ## Imputing missing values
+This data set contain some dyas which are data is missing
+Calculate what is the amountof data mising and what is the percantage
+```{r}
+#overall NA Samples
+NA_count <- sum(is.na(Activity_DF$steps))
+#Precentage of missing data 
+NA_Precentage<-sum(is.na(Activity_DF$steps)) /length(Activity_DF$steps) * 100
+sprintf("Overall Steps Data misiing is %f in Precentage %f%%",NA_count,NA_Precentage)
+```
+
+The amount of the missing data is not negligible 
+In order to overcome the NA values will be replaced by the mean value per day
+
+```{r}
+#calaculate the positin of the NA values 
+NA_Vector_Pos<-which(is.na(Activity_DF$steps))
+```
 
 
 
