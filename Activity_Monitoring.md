@@ -110,7 +110,7 @@ hist_NA_removed<-ggplot(data=na.omit(Steps_Per_Day),aes(Total.Steps))+geom_histo
 hist_NA_removed
 ```
 
-![](Activity_Monitoring_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+![](Activity_Monitoring_files/figure-html/Histogram No NA-1.png)<!-- -->
 
 Processing ...
 Calculate the mean and median per day.
@@ -163,7 +163,7 @@ library(ggplot2)
 ggplot(data=Steps_Per_Interval,aes(y=x,x=Group.1))+geom_line(colour="blue",size=1)+labs(y="Avarage number of steps",x = "Interval in minutes", title = "Time series of the average number of steps taken (NA Removed)")
 ```
 
-![](Activity_Monitoring_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](Activity_Monitoring_files/figure-html/Time Serias No NA-1.png)<!-- -->
 
 
 
@@ -217,7 +217,6 @@ head(Activity_DF_NO_NA)
 ```
 
 
-
 Calculate and Plot again the total sum of the steps per day after handling the NA values. 
 
 ```r
@@ -248,7 +247,7 @@ hist_NA_Handled<-ggplot(data=Steps_Per_Day_NA_Handled,aes(Total.Steps.NA.Handled
 hist_NA_Handled
 ```
 
-![](Activity_Monitoring_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+![](Activity_Monitoring_files/figure-html/Histogram with mean values-1.png)<!-- -->
 
 
 plot the two Histogrhams side by side : 
@@ -260,7 +259,24 @@ plot the two Histogrhams side by side :
 gridExtra::grid.arrange(hist_NA_removed, hist_NA_Handled, nrow = 1)
 ```
 
-![](Activity_Monitoring_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+![](Activity_Monitoring_files/figure-html/Two Histograms-1.png)<!-- -->
+
+
+
+
+
+Plot the Two Time Serias of the Average number of steps , one with missing values and one with 
+missing values replaced by the mean value per day.
+
+```r
+#plot a time serial of the avaarge number of steps one without the missing values and one with the mean value filling the mising values 
+ggplot(data=Steps_Per_Interval,aes(y=x,x=Group.1,color="Missing Values"))+geom_line(size=1)+labs(y="Avarage number of steps",x = "Interval in minutes", title = "Time series of the average number of steps taken")+geom_line(data=Steps_Per_Interval_NA_Handled,aes(y=x,x=Group.1,color="Mean Values"),size=1)+scale_color_manual(values = c(
+    'Missing Values' = 'blue',
+    'Mean Values' = 'red')) +
+  labs(color = 'Type')
+```
+
+![](Activity_Monitoring_files/figure-html/Two lines no NA and with Mean-1.png)<!-- -->
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
@@ -323,6 +339,6 @@ Using ggplot create a Panel plot comparing the average number of steps taken per
 ggplot(data=Mean_Interval,aes(y=steps,x=interval))+geom_line(colour="blue",size=1)+labs(y="Avarage number of steps",x = "Interval in minutes", title = "Time series of the average number of steps taken \n  Split according to weekends or regular weekdays")+facet_grid(. ~ Week.end)
 ```
 
-![](Activity_Monitoring_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
+![](Activity_Monitoring_files/figure-html/Time Serias Weekdys or Weekends-1.png)<!-- -->
 
 
