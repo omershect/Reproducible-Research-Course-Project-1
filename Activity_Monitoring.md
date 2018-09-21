@@ -113,24 +113,24 @@ hist_NA_removed
 ![](Activity_Monitoring_files/figure-html/Histogram1-1.png)<!-- -->
 
 Processing ...
-Calculate the mean and median per day.
+Calculate the mean and median of the total stesp.
 
 ```r
-#Add the mean and median steps per day to the Steps_Per_Day
-Steps_Per_Day<-cbind(Steps_Per_Day,data.frame(Steps.mean = tapply(Activity_DF$steps,as.Date(Activity_DF$date,"%Y-%m-%d"),mean)))
-
-Steps_Per_Day<-cbind(Steps_Per_Day,data.frame(Steps.median = tapply(Activity_DF$steps,as.Date(Activity_DF$date,"%Y-%m-%d"),median)))
-head(Steps_Per_Day)
+steps_mean_total<- mean(Steps_Per_Day$Total.Steps,na.rm=TRUE)
+sprintf("mean of the total number of steps taken per day:%f ", steps_mean_total)
 ```
 
 ```
-##                  date Total.Steps Steps.mean Steps.median
-## 2012-10-01 2012-10-01          NA         NA           NA
-## 2012-10-02 2012-10-02         126    0.43750            0
-## 2012-10-03 2012-10-03       11352   39.41667            0
-## 2012-10-04 2012-10-04       12116   42.06944            0
-## 2012-10-05 2012-10-05       13294   46.15972            0
-## 2012-10-06 2012-10-06       15420   53.54167            0
+## [1] "mean of the total number of steps taken per day:10766.188679 "
+```
+
+```r
+steps_median_total<- median(Steps_Per_Day$Total.Steps,na.rm=TRUE)
+sprintf("median of the total number of steps taken per day:%f ", steps_median_total)
+```
+
+```
+## [1] "median of the total number of steps taken per day:10765.000000 "
 ```
 
 ## What is the average daily activity pattern?
