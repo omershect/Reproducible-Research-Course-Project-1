@@ -54,7 +54,7 @@ head(Steps_Per_Day)
 ```
 
 Plot the Histogram of the total steps per day (without NA values).
-```{r Histogram Plot}
+```{r}
 ##Load ggplot2
 library(ggplot2)
 
