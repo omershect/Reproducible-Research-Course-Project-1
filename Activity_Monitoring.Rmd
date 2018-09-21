@@ -9,10 +9,10 @@ output:
     keep_md: true
 ---
 ## Data Loading
-Download the files and unzip them into a data directory 
-Check if data directory exist, if not create it
-Than download the data and unzip it if not allredy exist
-Read the Dataset into a datframe - Activity_DF
+Download the files and unzip them into a data directory. 
+Check if data directory exists, if not create it.
+Then download the data and unzip it if not already exist.
+Read the Dataset into a data frame - Activity_DF.
 ```{r}
 if(!file.exists("data")) {  
         dir.create("data")  
@@ -27,13 +27,16 @@ Activity_DF<-read.csv("./data/Activity.csv",sep = ",")
 ```
 
 
-## First look at the dataset
-
+## First look at the dataset 
+using str  Summary and head (ignoring the NA values in step) .
+Getting first impression of the data.
 ```{r}
 str(Activity_DF)
-#Show only the non missing values in steps 
-head(Activity_DF[which(!is.na(Activity_DF$steps)), ])
+
+
 summary(Activity_DF)
+#Use Head Show only the non missing values in steps 
+head(Activity_DF[which(!is.na(Activity_DF$steps)), ])
 ```
 
 
@@ -41,10 +44,8 @@ summary(Activity_DF)
 
 
 Group the number of steps by date and intervals. 
-Find the total number of steps per day over all days. 
-some of the days have no steps data. 
-This will be not shwon in the plot.
-
+Find the total number of steps per day over all days. Some of the days have no steps data. 
+This will be not shown in the plot.
 ```{r}
 #Create a dataframe with  total steps per day  and dates
 Steps_Per_Day<-data.frame(date = unique(as.Date(Activity_DF$date,"%Y-%m-%d")), Total.Steps = tapply(Activity_DF$steps,as.Date(Activity_DF$date,"%Y-%m-%d"),sum))
@@ -64,8 +65,7 @@ hist_NA_removed
 
 ```
 
-
-
+Processing ...
 Calculate the mean and median per day.
 ```{r}
 #Add the mean and median steps per day to the Steps_Per_Day
@@ -78,7 +78,10 @@ head(Steps_Per_Day)
 
 ## What is the average daily activity pattern?
 
-Calculate the averge steps per interval.
+Calculate the average steps per interval.
+This is done using the aggregate function 
+Then print the interval with the maximum processing ...
+Calculate the mean and median per day.
 ```{r}
 #Calculate the averge steps per interval (NA Remove)
 Steps_Per_Interval<-aggregate(Activity_DF$steps, 
@@ -103,8 +106,8 @@ ggplot(data=Steps_Per_Interval,aes(y=x,x=Group.1))+geom_line(colour="blue",size=
 
 
 ## Imputing missing values
-This data set contain some dyas which are data is missing.
-Calculate what is the amountof data mising and what is the percantage.
+This dataset contains some days which are data is missing.
+Calculate what the amount of data missing is and what is the percentage.
 ```{r}
 #overall NA Samples
 NA_count <- sum(is.na(Activity_DF$steps))
@@ -114,16 +117,23 @@ sprintf("Overall Steps Data misiing is %f in Precentage %f%%",NA_count,NA_Precen
 ```
 
 The amount of the missing data is not negligible.  
-In order to overcome the NA values will be replaced by the mean value per day.
+To overcome the NA values, they will be replaced by the mean steps per day.
+Re-Calculate the Steps per interval 
 ```{r}
 #calaculate the positin of the NA values 
 NA_Vector_Pos<-which(is.na(Activity_DF$steps))
-#Create avector of the means
+#Create a avector of the means
 Mean_Vector <- rep(mean(Activity_DF$steps, na.rm=TRUE), times=length(NA_Vector_Pos))
 #Copy the orignal Data frame to a new one
 Activity_DF_NO_NA<-Activity_DF
 #replace all NA values with the means values per day 
 Activity_DF_NO_NA[NA_Vector_Pos, "steps"] <- Mean_Vector
+
+#Calculate the averge steps per interval (NA Handled)
+Steps_Per_Interval_NA_Handled<-aggregate(Activity_DF_NO_NA$steps, 
+                       by=list(Activity_DF_NO_NA$interval), 
+                       FUN=mean, 
+                       na.rm=TRUE)
 
 head(Activity_DF_NO_NA)
 
@@ -132,8 +142,7 @@ head(Activity_DF_NO_NA)
 
 
 
-Calculate and Plot again the total sum of the steps per day after handling the NA values 
-
+Calculate and Plot again the total sum of the steps per day after handling the NA values. 
 ```{r}
 #Create a dataframe with  total steps per day  and dates
 Steps_Per_Day_NA_Handled<-data.frame(date = unique(as.Date(Activity_DF_NO_NA$date,"%Y-%m-%d")), Total.Steps.NA.Handled = tapply(Activity_DF_NO_NA$steps,as.Date(Activity_DF$date,"%Y-%m-%d"),sum))
@@ -141,19 +150,18 @@ Steps_Per_Day_NA_Handled<-data.frame(date = unique(as.Date(Activity_DF_NO_NA$dat
 head(Steps_Per_Day_NA_Handled)
 ```
 
-Plot the Histogram of the total steps per day (Including NA values).
+Plot the Histogram of the total steps per day (After handling the NA values).
 ```{r}
 ##Load ggplot2
 library(ggplot2)
 
 #Plot the Histogram (This time with the NA replaced by mean values)
-
 hist_NA_Handled<-ggplot(data=Steps_Per_Day_NA_Handled,aes(Total.Steps.NA.Handled))+geom_histogram(bins=10,colour='black', fill='red',binwidth = 900)+ggtitle("Histogram \nTotal Steps per day (NA Handled)")+labs(x = "Steps",y = "Count")
 hist_NA_Handled
 ```
 
 
-Now plot the two Histogrhams side by side : 
+plot the two Histogrhams side by side : 
 1. With Mising values removed 
 2. With missing values replaced by mean values 
 ```{r}
@@ -169,8 +177,11 @@ Set a new column which indicate if the sample is week days or weekend
 Do some summary calculation 
 Plot the activtes per 5 minutes interval according to the week or weekend days 
 
-
-
+Load required libraryis 
+dplyr
+moasic
+Set the system time to LC_TIME 
+This is done in order to create a distingishe between weekdays and Weekend
 ```{r results='asis', echo=FALSE, include=FALSE,}
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
 #Load library dplye
@@ -181,7 +192,11 @@ library(mosaic)
 Sys.setlocale("LC_TIME", "C")
 ```
 
-
+Processing:
+Creating new column which hold the week of the day (Sunda, Monday, ...)based on the date
+Create a colomns weekend  1 - Weekend (Saturday or Sunday) , 0 rest of the week days 
+Based on the Weekend paramter create a mean _interval data frame which is grouped by Week end or not 
+and holds the mean values per interval
 ```{r}
 #Convert the Date colomn from Charcter to date format
 Activity_DF_NO_NA$date<-as.Date(Activity_DF_NO_NA$date,"%Y-%m-%d")
@@ -189,8 +204,24 @@ Activity_DF_NO_NA$date<-as.Date(Activity_DF_NO_NA$date,"%Y-%m-%d")
 Activity_DF_NO_NA<-mutate(Activity_DF_NO_NA,Week.Days=weekdays(Activity_DF_NO_NA$date))
 #Create a colomns weekend  1 - Weekend (Saturday or Sunday) , 0 rest of the week days 
 Activity_DF_NO_NA<-mutate(Activity_DF_NO_NA,Week.end=derivedFactor("1" = (Activity_DF_NO_NA$Week.Days == "Sunday") | Activity_DF_NO_NA$Week.Days == "Saturday",.default = 0))
-head(Activity_DF_NO_NA)
 
+#Name the levels of the Wee.end columns
+levels(Activity_DF_NO_NA$Week.end)<-c("Week.End","Week.Days")
+
+#Group by according Week ebd or not , and summarize based on the interbval 
+#Note the Week days column is exceluded 
+Mean_Interval<-select(Activity_DF_NO_NA,-c("Week.Days"))%>%group_by(interval,Week.end)%>%summarise_all(funs(mean))
+
+
+head(Mean_Interval)
+
+```
+
+Plot
+using ggplot crate a Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
+```{r}
+#plot a time serial of the avaarge number of stesp (withot missing values)
+ggplot(data=Mean_Interval,aes(y=steps,x=interval))+geom_line(colour="blue",size=1)+labs(y="Avarage number of steps",x = "Interval in minutes", title = "Time series of the average number of steps taken \n  Split according to weekends or regular weekdays")+facet_grid(. ~ Week.end)
 
 ```
 
