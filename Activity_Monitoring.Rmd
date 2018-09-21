@@ -171,11 +171,11 @@ gridExtra::grid.arrange(hist_NA_removed, hist_NA_Handled, nrow = 1)
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
-Using the modyfied Dataframe (with handled NA values) : 
-Convert the dates from Factor to date
-Set a new column which indicate if the sample is week days or weekend
-Do some summary calculation 
-Plot the activtes per 5 minutes interval according to the week or weekend days 
+Using the modified Dataframe (with handled NA values) : 
+Convert the dates from Factor to time.
+Set a new column which indicates if the sample is weekdays or weekend.
+Do some summary calculation. 
+Plot the activities per 5 minutes interval according to the week or weekend days.
 
 Load required libraryis 
 dplyr
@@ -193,10 +193,10 @@ Sys.setlocale("LC_TIME", "C")
 ```
 
 Processing:
-Creating new column which hold the week of the day (Sunda, Monday, ...)based on the date
-Create a colomns weekend  1 - Weekend (Saturday or Sunday) , 0 rest of the week days 
-Based on the Weekend paramter create a mean _interval data frame which is grouped by Week end or not 
-and holds the mean values per interval
+Creating a new column which holds the week of the day (Sunda, Monday, ...)based on the date.
+Create a column weekend  1 - Weekend (Saturday or Sunday) , 0 rest of the weekdays. 
+Based on the Weekend parameter create a mean _interval data frame which is grouped by Weekend or not 
+and holds the mean values per interval.
 ```{r}
 #Convert the Date colomn from Charcter to date format
 Activity_DF_NO_NA$date<-as.Date(Activity_DF_NO_NA$date,"%Y-%m-%d")
@@ -218,7 +218,7 @@ head(Mean_Interval)
 ```
 
 Plot
-using ggplot crate a Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
+Using ggplot create a Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends.
 ```{r}
 #plot a time serial of the avaarge number of stesp (withot missing values)
 ggplot(data=Mean_Interval,aes(y=steps,x=interval))+geom_line(colour="blue",size=1)+labs(y="Avarage number of steps",x = "Interval in minutes", title = "Time series of the average number of steps taken \n  Split according to weekends or regular weekdays")+facet_grid(. ~ Week.end)
