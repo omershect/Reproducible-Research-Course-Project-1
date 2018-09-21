@@ -54,7 +54,7 @@ head(Steps_Per_Day)
 ```
 
 Plot the Histogram of the total steps per day (without NA values).
-```{r Histogram No NA}
+```{r Histogram1}
 ##Load ggplot2
 library(ggplot2)
 
@@ -95,7 +95,7 @@ sprintf("The 5-minutes interval that, on average, holds the maximum number of st
 ```
 
 Time series plot of the average number of steps taken using ggplot. 
-```{r Time Serias No NA}
+```{r TimeSerias1}
 #Load ggplot2
 library(ggplot2)
 #plot a time serial of the avaarge number of stesp (withot missing values)
@@ -150,7 +150,7 @@ head(Steps_Per_Day_NA_Handled)
 ```
 
 Plot the Histogram of the total steps per day (After handling the NA values).
-```{r Histogram with mean values}
+```{r Histogram2}
 ##Load ggplot2
 library(ggplot2)
 
@@ -163,7 +163,7 @@ hist_NA_Handled
 plot the two Histogrhams side by side : 
 1. With Mising values removed 
 2. With missing values replaced by mean values 
-```{r Two Histograms}
+```{r TwoHistograms}
 #Plot the two Histograms
 gridExtra::grid.arrange(hist_NA_removed, hist_NA_Handled, nrow = 1)
 ```
@@ -174,7 +174,7 @@ gridExtra::grid.arrange(hist_NA_removed, hist_NA_Handled, nrow = 1)
 
 Plot the Two Time Serias of the Average number of steps , one with missing values and one with 
 missing values replaced by the mean value per day.
-```{r Two lines no NA and with Mean}
+```{r TwoLines}
 #plot a time serial of the avaarge number of steps one without the missing values and one with the mean value filling the mising values 
 ggplot(data=Steps_Per_Interval,aes(y=x,x=Group.1,color="Missing Values"))+geom_line(size=1)+labs(y="Avarage number of steps",x = "Interval in minutes", title = "Time series of the average number of steps taken")+geom_line(data=Steps_Per_Interval_NA_Handled,aes(y=x,x=Group.1,color="Mean Values"),size=1)+scale_color_manual(values = c(
     'Missing Values' = 'blue',
@@ -232,7 +232,7 @@ head(Mean_Interval)
 
 Plot
 Using ggplot create a Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends.
-```{r Time Serias Weekdys or Weekends}
+```{r TimeSerias3}
 #plot a time serial of the avaarge number of stesp (withot missing values)
 ggplot(data=Mean_Interval,aes(y=steps,x=interval))+geom_line(colour="blue",size=1)+labs(y="Avarage number of steps",x = "Interval in minutes", title = "Time series of the average number of steps taken \n  Split according to weekends or regular weekdays")+facet_grid(. ~ Week.end)
 

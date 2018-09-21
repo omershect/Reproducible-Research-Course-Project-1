@@ -110,7 +110,7 @@ hist_NA_removed<-ggplot(data=na.omit(Steps_Per_Day),aes(Total.Steps))+geom_histo
 hist_NA_removed
 ```
 
-![](Activity_Monitoring_files/figure-html/Histogram No NA-1.png)<!-- -->
+![](Activity_Monitoring_files/figure-html/Histogram1-1.png)<!-- -->
 
 Processing ...
 Calculate the mean and median per day.
@@ -163,7 +163,7 @@ library(ggplot2)
 ggplot(data=Steps_Per_Interval,aes(y=x,x=Group.1))+geom_line(colour="blue",size=1)+labs(y="Avarage number of steps",x = "Interval in minutes", title = "Time series of the average number of steps taken (NA Removed)")
 ```
 
-![](Activity_Monitoring_files/figure-html/Time Serias No NA-1.png)<!-- -->
+![](Activity_Monitoring_files/figure-html/TimeSerias1-1.png)<!-- -->
 
 
 
@@ -247,7 +247,7 @@ hist_NA_Handled<-ggplot(data=Steps_Per_Day_NA_Handled,aes(Total.Steps.NA.Handled
 hist_NA_Handled
 ```
 
-![](Activity_Monitoring_files/figure-html/Histogram with mean values-1.png)<!-- -->
+![](Activity_Monitoring_files/figure-html/Histogram2-1.png)<!-- -->
 
 
 plot the two Histogrhams side by side : 
@@ -259,7 +259,7 @@ plot the two Histogrhams side by side :
 gridExtra::grid.arrange(hist_NA_removed, hist_NA_Handled, nrow = 1)
 ```
 
-![](Activity_Monitoring_files/figure-html/Two Histograms-1.png)<!-- -->
+![](Activity_Monitoring_files/figure-html/TwoHistograms-1.png)<!-- -->
 
 
 
@@ -276,7 +276,7 @@ ggplot(data=Steps_Per_Interval,aes(y=x,x=Group.1,color="Missing Values"))+geom_l
   labs(color = 'Type')
 ```
 
-![](Activity_Monitoring_files/figure-html/Two lines no NA and with Mean-1.png)<!-- -->
+![](Activity_Monitoring_files/figure-html/TwoLines-1.png)<!-- -->
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
@@ -339,6 +339,6 @@ Using ggplot create a Panel plot comparing the average number of steps taken per
 ggplot(data=Mean_Interval,aes(y=steps,x=interval))+geom_line(colour="blue",size=1)+labs(y="Avarage number of steps",x = "Interval in minutes", title = "Time series of the average number of steps taken \n  Split according to weekends or regular weekdays")+facet_grid(. ~ Week.end)
 ```
 
-![](Activity_Monitoring_files/figure-html/Time Serias Weekdys or Weekends-1.png)<!-- -->
+![](Activity_Monitoring_files/figure-html/TimeSerias3-1.png)<!-- -->
 
 
