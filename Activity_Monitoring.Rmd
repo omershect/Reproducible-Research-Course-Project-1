@@ -52,13 +52,15 @@ Steps_Per_Day<-data.frame(date = unique(as.Date(Activity_DF$date,"%Y-%m-%d")), T
 head(Steps_Per_Day)
 ```
 
-Plot the Histogram of the total steps per day (Including NA values).
+Plot the Histogram of the total steps per day (without NA values).
 ```{r Histogram Plot}
 ##Load ggplot2
 library(ggplot2)
 
 #Plot the Histogram (Remove missing values)
-qplot(na.omit(Steps_Per_Day)$Total.Steps, geom="histogram",bins=10,xlab = "Steps",ylab = "Count",main = "Total Steps per day Histogram (NA Removed)")  
+theme_update(plot.title = element_text(hjust = 0.5))
+hist_NA_removed<-ggplot(data=na.omit(Steps_Per_Day),aes(Total.Steps))+geom_histogram(bins=10,colour='black', fill='red',binwidth = 900)+ggtitle("Histogram \n Total Steps per day (NA Removed)")+labs(x = "Steps",y = "Count")
+hist_NA_removed
 
 ```
 
@@ -94,7 +96,7 @@ Time series plot of the average number of steps taken using ggplot.
 #Load ggplot2
 library(ggplot2)
 #plot a time serial of the avaarge number of stesp (withot missing values)
-ggplot(data=Steps_Per_Interval,aes(y=x,x=Group.1))+geom_line()+labs(y="Avarage number of steps",x = "Interval in minutes", title = "Time series of the average number of steps taken (NA Removed)")
+ggplot(data=Steps_Per_Interval,aes(y=x,x=Group.1))+geom_line(colour="blue",size=1)+labs(y="Avarage number of steps",x = "Interval in minutes", title = "Time series of the average number of steps taken (NA Removed)")
 
 ```
 
@@ -134,7 +136,7 @@ Calculate and Plot again the total sum of the steps per day after handling the N
 
 ```{r}
 #Create a dataframe with  total steps per day  and dates
-Steps_Per_Day_NA_Handled<-data.frame(date = unique(as.Date(Activity_DF_NO_NA$date,"%Y-%m-%d")), Total.Steps = tapply(Activity_DF_NO_NA$steps,as.Date(Activity_DF$date,"%Y-%m-%d"),sum))
+Steps_Per_Day_NA_Handled<-data.frame(date = unique(as.Date(Activity_DF_NO_NA$date,"%Y-%m-%d")), Total.Steps.NA.Handled = tapply(Activity_DF_NO_NA$steps,as.Date(Activity_DF$date,"%Y-%m-%d"),sum))
 
 head(Steps_Per_Day_NA_Handled)
 ```
@@ -144,9 +146,19 @@ Plot the Histogram of the total steps per day (Including NA values).
 ##Load ggplot2
 library(ggplot2)
 
-#Plot the Histogram (Remove missing values)
-qplot(Steps_Per_Day_NA_Handled$Total.Steps, geom="histogram",bins=10,xlab = "Steps",ylab = "Count",main = "Total Steps per day Histogram (NA Handled)")  
+#Plot the Histogram (This time with the NA replaced by mean values)
 
+hist_NA_Handled<-ggplot(data=Steps_Per_Day_NA_Handled,aes(Total.Steps.NA.Handled))+geom_histogram(bins=10,colour='black', fill='red',binwidth = 900)+ggtitle("Histogram \nTotal Steps per day (NA Handled)")+labs(x = "Steps",y = "Count")
+hist_NA_Handled
+```
+
+
+Now plot the two Histogrhams side by side : 
+1. With Mising values removed 
+2. With missing values replaced by mean values 
+```{r}
+#Plot the two Histograms
+gridExtra::grid.arrange(hist_NA_removed, hist_NA_Handled, nrow = 1)
 ```
 
 
